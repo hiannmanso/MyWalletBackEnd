@@ -1,5 +1,4 @@
 import joi from 'joi';
-import { v4 as createToken } from 'uuid';
 import bcrypt from 'bcrypt';
 
 import database from '../database.js';
@@ -8,8 +7,13 @@ export async function postSignUp(req, res) {
 	const { name, email, password } = req.body;
 	const passwordHash = bcrypt.hashSync(password, 10);
 	const signUpSchema = joi.object({
-		name: joi.string().min(3).max(30).required(),
-		email: joi.string().pattern(/com/).required(),
+		name: joi
+			.string()
+			.min(3)
+			.max(30)
+			.pattern(/[a-zA-Z0-9]/)
+			.required(),
+		email: joi.string().email().required(),
 		password: joi
 			.string()
 			.pattern(/[a-zA-Z0-9]/)
@@ -23,6 +27,13 @@ export async function postSignUp(req, res) {
 		res.status(400).send(validation.error);
 		return;
 	}
+	const checkUserIsValid = await database
+		.collection('accounts')
+		.findOne({ email });
+	if (checkUserIsValid)
+		return res
+			.status(400)
+			.send('email já está sendo usado, por favor, tente com outro.');
 	try {
 		const user = await database.collection('accounts').insertOne({
 			name,

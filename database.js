@@ -1,17 +1,16 @@
 import { MongoClient } from 'mongodb';
 import chalk from 'chalk';
+import dotenv from 'dotenv';
 
+dotenv.config();
 let database = null;
-const mongocliente = new MongoClient('mongodb://127.0.0.1:27017/');
-mongocliente
-	.connect()
-
-	.then(() => {
-		database = mongocliente.db('myWalley');
-		console.log(chalk.bold.green('Connected to database'));
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+const mongocliente = new MongoClient(process.env.SERVER_URL);
+try {
+	await mongocliente.connect();
+	database = mongocliente.db('myWallet');
+	console.log(chalk.bold.red('Connected to database!'));
+} catch (err) {
+	console.log(err);
+}
 
 export default database;
