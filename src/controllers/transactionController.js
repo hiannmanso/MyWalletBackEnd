@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-import database from '../database.js';
+import database from '../db/database.js';
 import { ObjectId } from 'mongodb';
 
 export async function postTransaction(req, res) {

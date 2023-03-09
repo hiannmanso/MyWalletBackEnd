@@ -1,7 +1,7 @@
 import joi from 'joi';
 import bcrypt from 'bcrypt';
 
-import database from '../database.js';
+import database from '../db/database.js';
 
 export async function postSignUp(req, res) {
 	const { name, email, password } = req.body;

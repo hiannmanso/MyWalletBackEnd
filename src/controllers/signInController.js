@@ -3,7 +3,7 @@ import joi from 'joi';
 import { v4 } from 'uuid';
 import bcrypt from 'bcrypt';
 
-import database from '../database.js';
+import database from '../db/database.js';
 
 export async function postSingIn(req, res) {
 	const { email, password } = req.body;
